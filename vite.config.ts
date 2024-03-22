@@ -1,22 +1,22 @@
+import million from "million/compiler";
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc";
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  // prevent vite from obscufing rust errors
+export default defineConfig(async () => ({
+  plugins: [million.vite({ auto: true }), react()],
+
+  // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
+  //
+  // 1. prevent vite from obscuring rust errors
   clearScreen: false,
-  // Tauri expects a fixed port, fail if that port is not available
+  // 2. tauri expects a fixed port, fail if that port is not available
   server: {
+    port: 1420,
     strictPort: true,
+    watch: {
+      // 3. tell vite to ignore watching `src-tauri`
+      ignored: ["**/src-tauri/**"],
+    },
   },
-  // to make use of `TAURI_PLATFORM`, `TAURI_ARCH`, `TAURI_FAMILY`
-  // `TAURI_PLATFORM_VERSION`, `TAURI_PLATFORM_TYPE` AND `TAURI_DEBUG`
-  // env variables
-  envPrefix: ["VITE_", "TAURI_"],
-  build: {
-    target: ["es2021", "chrome100", "safari13"],
-    minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
-    sourcemap: !!process.env.TAURI_DEBUG,
-  },
-  plugins: [react()],
-});
+}));

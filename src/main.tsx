@@ -1,13 +1,15 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import "./styles.scss";
 
-import App from './app'
-import './main.scss'
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+	<React.StrictMode>
+		<BrowserRouter>
+			<App />
+		</BrowserRouter>
+	</React.StrictMode>,
+);
 
-ReactDOM.createRoot(document.querySelector('#root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-)
-
-postMessage({ payload: 'removeLoading' }, '*')
+postMessage({ payload: "removeLoading" }, "*");
